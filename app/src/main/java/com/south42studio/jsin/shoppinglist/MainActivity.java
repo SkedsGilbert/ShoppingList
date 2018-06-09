@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,18 +15,20 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
+
+import static android.view.Gravity.CENTER;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView textViewEmail;
     private EditText editTextEmail;
-    private TextView textViewPassword;
     private EditText editTextPassword;
     private Button button_Login;
     private TextView textViewTestText;
     private FirebaseAuth mAuth;
     private static final String TAG = "MainActivity";
+    private boolean isRegister = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +37,10 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        textViewEmail = (TextView) findViewById(R.id.textView_email);
-        editTextEmail = (EditText) findViewById(R.id.editText_email);
-        textViewPassword = (TextView) findViewById(R.id.textView_password);
-        editTextPassword = (EditText) findViewById(R.id.editText_password);
-        button_Login = (Button) findViewById(R.id.button_Login);
-        textViewTestText = (TextView) findViewById(R.id.textView_testText);
+        editTextEmail = findViewById(R.id.email_et);
+        editTextPassword = findViewById(R.id.password_et);
+        button_Login = findViewById(R.id.login_bttn);
+        textViewTestText = findViewById(R.id.testText1_tv);
 
          setOnclick();
 
@@ -56,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
         button_Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //String content = editTextEmail.getText().toString() +"  "+ editTextPassword.getText().toString();
-                //textViewTestText.setText(content);
                 determineLoginStatus();
             }
         });
@@ -66,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
     private void determineLoginStatus(){
         final String email = editTextEmail.getText().toString();
         final String password = editTextPassword.getText().toString();
+
+        if (isRegister == false){
+            Log.d(TAG, "determineLoginStatus:" + button_Login.getText().toString());
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -77,51 +79,66 @@ public class MainActivity extends AppCompatActivity {
 
                             String content = user.getUid();
                             textViewTestText.setText(content);
-                            //updateUI(user);
                             //TODO: send user to their list
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            //Toast.makeText(MainActivity.this, "Authentication failed.",
-                            //       Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
-                            //TODO: send user to their list
-                            createUser(email,password);
+                            String exception = ((FirebaseAuthException) task.getException()).getErrorCode();
 
+                            if (exception.equals("ERROR_USER_NOT_FOUND")){
+                                showToast(getString(R.string.user_not_found));
+
+                            } else {
+                                showToast((getString(R.string.invalid_login)));
+                            }
 
                         }
 
-                        // ...
+
                     }
                 });
+        }else{
+                try {
+
+                mAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d(TAG, "createUserWithEmail:success");
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    String content = user.getEmail();
+                                    textViewTestText.setText(content);
+                                    //TODO: send user to their list
+                                    // updateUI(user);
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                    showToast(task.getException().getLocalizedMessage());
+
+                                }
+
+                            }
+                        });
+                } catch (Exception e){
+                    showToast(getString(R.string.blank_login_err_message));
+                }
+
+        }
     }
 
-    private void createUser(String email, String password){
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            String content = user.getEmail();
-                            textViewTestText.setText(content);
-                           // updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(MainActivity.this, task.getException().getLocalizedMessage(),
-                                    Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
-                        }
-
-                        // ...
-                    }
-                });
+    public void setCreateBttn(View view) {
+        button_Login.setText(R.string.register_user);
+        isRegister = true;
     }
 
-
+    private void showToast(String message){
+        Toast toast = Toast.makeText(MainActivity.this, message,
+                Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER,0,0);
+        toast.show();
+    }
 }
 
 //TODO: Add all my strings to the string.xml then handle errors like wrong passwords

@@ -3,4 +3,9 @@
     <string name="email_address">Email Address</string>
     <string name="login_password">Password</string>
     <string name="login_button">Login</string>
+    <string name="create_user">Create User</string>
+    <string name="register_user">Register</string>
+    <string name="invalid_login">Invalid email/password</string>
+    <string name="user_not_found">Must create a user</string>
+    <string name="blank_login_err_message">Email or password cannot be blank</string>
 </resources>

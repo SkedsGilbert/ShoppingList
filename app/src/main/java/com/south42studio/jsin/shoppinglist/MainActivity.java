@@ -1,5 +1,6 @@
 package com.south42studio.jsin.shoppinglist;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
                                     String content = user.getUid();
                                     textViewTestText.setText(content);
-                                    //TODO: send user to their list
+                                    proceedToShoppingList();
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -115,12 +116,14 @@ public class MainActivity extends AppCompatActivity {
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     String content = user.getEmail();
                                     textViewTestText.setText(content);
-                                    //TODO: send user to their list
+                                    proceedToShoppingList();
                                     // updateUI(user);
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w(TAG, "createUserWithEmail:failure", task.getException());
                                     showToast(task.getException().getLocalizedMessage());
+                                    isRegister = false;
+                                    button_Login.setText(R.string.login_button);
 
                                 }
 
@@ -143,6 +146,11 @@ public class MainActivity extends AppCompatActivity {
                 Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER,0,0);
         toast.show();
+    }
+
+    private void proceedToShoppingList(){
+        Intent intent = new Intent(this,ShoppingListActivity.class);
+        startActivity(intent);
     }
 }
 

@@ -68,35 +68,40 @@ public class MainActivity extends AppCompatActivity {
 
         if (isRegister == false){
             Log.d(TAG, "determineLoginStatus:" + button_Login.getText().toString());
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+            try {
 
-                            String content = user.getUid();
-                            textViewTestText.setText(content);
-                            //TODO: send user to their list
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            String exception = ((FirebaseAuthException) task.getException()).getErrorCode();
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d(TAG, "signInWithEmail:success");
+                                    FirebaseUser user = mAuth.getCurrentUser();
 
-                            if (exception.equals("ERROR_USER_NOT_FOUND")){
-                                showToast(getString(R.string.user_not_found));
+                                    String content = user.getUid();
+                                    textViewTestText.setText(content);
+                                    //TODO: send user to their list
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                    String exception = ((FirebaseAuthException) task.getException()).getErrorCode();
 
-                            } else {
-                                showToast((getString(R.string.invalid_login)));
+                                    if (exception.equals("ERROR_USER_NOT_FOUND")) {
+                                        showToast(getString(R.string.user_not_found));
+
+                                    } else {
+                                        showToast((getString(R.string.invalid_login)));
+                                    }
+
+                                }
+
+
                             }
-
-                        }
-
-
-                    }
-                });
+                        });
+            } catch (Exception e){
+                showToast(getString(R.string.blank_login_err_message));
+            }
         }else{
                 try {
 

@@ -8,4 +8,5 @@
     <string name="invalid_login">Invalid email/password</string>
     <string name="user_not_found">Must create a user</string>
     <string name="blank_login_err_message">Email or password cannot be blank</string>
+    <string name="add_item_lbl">Add Item</string>
 </resources>

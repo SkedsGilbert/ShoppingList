@@ -26,4 +26,11 @@ public class ShoppingListActivity extends AppCompatActivity {
 
         usernameTv.setText(currentUser.getEmail());
     }
+
+    public void onStart(){
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        //TODO: check if user logged in then go to ListActivity
+    }
 }

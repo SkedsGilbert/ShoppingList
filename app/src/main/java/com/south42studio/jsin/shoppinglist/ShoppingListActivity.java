@@ -2,6 +2,8 @@ package com.south42studio.jsin.shoppinglist;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,12 +21,16 @@ public class ShoppingListActivity extends AppCompatActivity {
     private Button addItemBttn;
     private EditText itemNameEt;
 
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     private void assignViews() {
         usernameTv = findViewById(R.id.username_tv);
         addItemBttn = findViewById(R.id.add_item_bttn);
         itemNameEt = findViewById(R.id.item_name_et);
         usernameTv = findViewById(R.id.username_tv);
+        mRecyclerView = findViewById(R.id.recycler_list);
     }
 
 
@@ -39,6 +45,12 @@ public class ShoppingListActivity extends AppCompatActivity {
 
         assignViews();
         setOnclickListener();
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        //Need to Add a list adapter!
+
 
         usernameTv.setText(currentUser.getEmail());
     }

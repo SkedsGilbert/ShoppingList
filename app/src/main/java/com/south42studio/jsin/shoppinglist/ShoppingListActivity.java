@@ -1,29 +1,40 @@
 package com.south42studio.jsin.shoppinglist;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ShoppingListActivity extends AppCompatActivity {
 
+    public static final String TAG = "ShoppingListActivity";
     private FirebaseAuth mAuth;
 
     private TextView usernameTv;
 
     private Button addItemBttn;
     private EditText itemNameEt;
+    private EditText itemDescriptionEt;
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+
 
     private void assignViews() {
         usernameTv = findViewById(R.id.username_tv);
@@ -31,9 +42,10 @@ public class ShoppingListActivity extends AppCompatActivity {
         itemNameEt = findViewById(R.id.item_name_et);
         usernameTv = findViewById(R.id.username_tv);
         mRecyclerView = findViewById(R.id.recycler_list);
+        itemDescriptionEt = findViewById(R.id.item_description_et);
     }
 
-
+    private DocumentReference mDocRef = FirebaseFirestore.getInstance().document("shoplist/items");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +54,33 @@ public class ShoppingListActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
+//        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+      /*  // temp item creation delete once connected to the add button
+        Map<String, Object> item = new HashMap<>();
+        item.put("name", "Blue Moon");
+        item.put("description", "Beer");
+
+        db.collection("items")
+                .add(item)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d (TAG, "Item added with ID " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "Error adding item");
+                    }
+                });*/
 
         assignViews();
         setOnclickListener();
-        mRecyclerView.setHasFixedSize(true);
+       /* mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setLayoutManager(mLayoutManager);*/
 
         //Need to Add a list adapter!
 
@@ -67,6 +100,41 @@ public class ShoppingListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 usernameTv.setText(itemNameEt.getText().toString());
+                Log.d("TAG","inside the click listener");
+                String itemName = itemNameEt.getText().toString();
+                String itemDesc = itemDescriptionEt.getText().toString();
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                // temp item creation delete once connected to the add button
+                Map<String, Object> itemToSave = new HashMap<>();
+                itemToSave.put("name", itemName);
+                itemToSave.put("description", itemDesc);
+
+               /* mDocRef.set(itemToSave).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Document has been saved");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG,"Document failed!",e);
+                    }
+                });*/
+
+                db.collection("items")
+                        .add(itemToSave)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Log.d (TAG, "Item added with ID " + documentReference.getId());
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, "Error adding item");
+                            }
+                        });
             }
         });
     }

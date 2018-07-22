@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "113534941125",
+    "firebase_url": "https://shoplist-fdee5.firebaseio.com",
+    "project_id": "shoplist-fdee5",
+    "storage_bucket": "shoplist-fdee5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:113534941125:android:52b96a78ffbb41b2",
+        "android_client_info": {
+          "package_name": "com.south42studio.jsin.shoppinglist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "113534941125-h9cg542k5tvbifhfcgqbcmua2ck3pbgk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.south42studio.jsin.shoppinglist",
+            "certificate_hash": "0e391de50106b30e362a3c6621d1a0e820052409"
+          }
+        },
+        {
+          "client_id": "113534941125-sgaaedrvksrl8r1pme93lljabnfbd90f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.south42studio.jsin.shoppinglist",
+            "certificate_hash": "fae21c90a699c3d71c225b7bb56a6043c9721913"
+          }
+        },
+        {
+          "client_id": "113534941125-n4jl0p1orggq7gbdhs066e63u94ougbi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdzRlq_dHzG1UCZkxaHDvDvX6U3gd-QuM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "113534941125-n4jl0p1orggq7gbdhs066e63u94ougbi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

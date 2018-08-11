@@ -45,7 +45,7 @@ public class ShoppingListActivity extends AppCompatActivity {
         itemDescriptionEt = findViewById(R.id.item_description_et);
     }
 
-    private DocumentReference mDocRef = FirebaseFirestore.getInstance().document("shoplist/items");
+    //private DocumentReference mDocRef = FirebaseFirestore.getInstance().document("shoplist/items");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,27 +54,7 @@ public class ShoppingListActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-      /*  // temp item creation delete once connected to the add button
-        Map<String, Object> item = new HashMap<>();
-        item.put("name", "Blue Moon");
-        item.put("description", "Beer");
-
-        db.collection("items")
-                .add(item)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d (TAG, "Item added with ID " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Error adding item");
-                    }
-                });*/
 
         assignViews();
         setOnclickListener();
@@ -109,17 +89,6 @@ public class ShoppingListActivity extends AppCompatActivity {
                 itemToSave.put("name", itemName);
                 itemToSave.put("description", itemDesc);
 
-               /* mDocRef.set(itemToSave).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Document has been saved");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG,"Document failed!",e);
-                    }
-                });*/
 
                 db.collection("items")
                         .add(itemToSave)
@@ -135,6 +104,9 @@ public class ShoppingListActivity extends AppCompatActivity {
                                 Log.d(TAG, "Error adding item");
                             }
                         });
+
+                itemNameEt.setText("");
+                itemDescriptionEt.setText("");
             }
         });
     }

@@ -90,7 +90,7 @@ public class ShoppingListActivity extends AppCompatActivity {
                 itemToSave.put("description", itemDesc);
 
 
-                db.collection("items")
+                db.collection("items" )
                         .add(itemToSave)
                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                             @Override

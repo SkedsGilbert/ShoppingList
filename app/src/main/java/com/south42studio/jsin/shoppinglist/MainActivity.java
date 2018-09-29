@@ -13,11 +13,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.view.Gravity.CENTER;
 
@@ -30,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private static final String TAG = "MainActivity";
     private boolean isRegister = false;
+    private DatabaseHandler dbHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         final String email = editTextEmail.getText().toString();
         final String password = editTextPassword.getText().toString();
 
-        if (isRegister == false){
+        if (!isRegister){
             Log.d(TAG, "determineLoginStatus:" + button_Login.getText().toString());
             try {
 
@@ -90,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
                                     if (exception.equals("ERROR_USER_NOT_FOUND")) {
                                         showToast(getString(R.string.user_not_found));
+                                        setCreateBttn(button_Login);
 
                                     } else {
                                         showToast((getString(R.string.invalid_login)));
@@ -116,6 +125,29 @@ public class MainActivity extends AppCompatActivity {
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     String content = user.getEmail();
                                     textViewTestText.setText(content);
+                                    dbHandler.AddUsertoDB(user.getUid().toString(), user.getEmail());
+//                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+//                                    // temp item creation delete once connected to the add button
+//                                    Map<String, Object> userInfo = new HashMap<>();olo
+//                                    userInfo.put("user_id", user.getUid());
+//                                    userInfo.put("group_id", content);
+//
+//
+//                                    db.collection("user")
+//                                            .add(userInfo)
+//                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                                                @Override
+//                                                public void onSuccess(DocumentReference documentReference) {
+//                                                    Log.d (TAG, "Item added with ID " + documentReference.getId());
+//                                                }
+//                                            })
+//                                            .addOnFailureListener(new OnFailureListener() {
+//                                                @Override
+//                                                public void onFailure(@NonNull Exception e) {
+//                                                    Log.d(TAG, "Error adding item");
+//                                                }
+//                                            });
+
                                     proceedToShoppingList();
                                     // updateUI(user);
                                 } else {
